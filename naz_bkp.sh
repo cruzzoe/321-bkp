@@ -26,7 +26,7 @@ ping -c1 -W1 $ip_addr && echo 'server is up'  && host_up="True"|| echo 'server i
   fi
 
 declare -a dirs=(
-	"/home/cruz/mnt/synology/Documents"
+	"/home/cruz/mnt/synology/robimich"
 	"/home/cruz/mnt/synology/Music"
 	"/home/cruz/mnt/synology/Books"
 	"/home/cruz/mnt/synology/violin1208"
@@ -37,12 +37,16 @@ declare -a dirs=(
 	# Clone each directory. Add `--progress` for nicer (but more verbose) output.
 	for i in "${dirs[@]}"
 	do
-  	  echo "Syncing Directory: $i . First checking if it's mounted...."
-      # TODO if not mountpoint then dont copy!
-      mountpoint $i
+  	echo "Syncing Directory: $i . First checking if it's mounted...."
+    # TODO if not mountpoint then dont copy!
+    mountpoint $i
 	  target=$(echo "$i" | sed -e 's/\/.*\///g')
-          cmd="rsync -av $i/ /home/cruz/mnt/cruznas/$target --progress --delete"
-	  echo $target
+    echo "Checking destination cnaz mountpoint:"
+    mountpoint "/home/cruz/mnt/cruznas/$target" 
+
+    cmd="rsync -av $i/ /home/cruz/mnt/cruznas/$target --progress --delete"
+	  
+    echo $target
           echo $cmd 
 	  eval "$cmd"
 	  echo "Backup complete for $i"	
